@@ -20,9 +20,12 @@ colors = cycle(((0, 255, 0), (10, 255, 0), (20, 255, 0), (30, 255, 0), (40, 255,
 0), (220, 255, 0), (230, 255, 0), (240, 255, 0), (250, 255, 0), (255, 255, 0)))
 color = next(colors)
 
-def midpoint(p1, p2):
-	# minusing 12.5 so rec will be at center
-    return ((p1[0]+p2[0])/2 - 25, (p1[1]+p2[1])/2 - 25)
+def midpoint_1(p1, p2):
+    return ((p1[0]+p2[0])/2 - 25, (p1[1]+p2[1])/2 -50)
+
+def midpoint_2(p1, p2):
+    return ((p1[0]+p2[0])/2 - 50, (p1[1]+p2[1])/2 -25)
+
 
 class gameobject():
 	def __init__(self, image, angle, pcolor = 0):
@@ -30,7 +33,8 @@ class gameobject():
 		self.x = 400
 		self.y = 300
 		self.original_image = image
-		# color_surface(self.original_image, random.choice(c))
+		self.color1 = (255, 0, 0)
+		self.color2 = (255, 0, 0)
 		if pcolor != 0:
 			self.color = pcolor
 		else:
@@ -64,9 +68,9 @@ class gameobject():
 		self.image_rect.y = self.y - height
 		self.rect = pygame.Rect(self.x - 50, self.y - 50, 100, 100)
 		if drawrecs:
-			pygame.draw.rect(screen, self.color, self.image_rect)
-			# pygame.draw.rect(screen, (255, 0, 255, 0), self.lrect)
-			# pygame.draw.rect(screen, (255, 0, 0, 0), self.rrect)
+			# pygame.draw.rect(screen, self.color, self.image_rect)
+			pygame.draw.rect(screen, self.color1, self.lrect)
+			pygame.draw.rect(screen, self.color2, self.rrect)
 
 		# pygame.draw.rect(screen, color, self.rect)
 		screen.blit(self.rotated_image, (self.x - width, self.y - height))
@@ -74,20 +78,32 @@ class gameobject():
 	def adjustbox(self ):
 		center = self.rect.center
 		if self.angle >= 45 and self.angle <= 135:
-			self.lrect = pygame.Rect(midpoint(center, self.rect.bottomright), (50, 50))
-			self.rrect = pygame.Rect(midpoint(center, self.rect.bottomleft), (50, 50))
+			# bottom
+			# self.lrect = pygame.Rect(midpoint(center, self.rect.bottomright), (50, 50))
+			# self.rrect = pygame.Rect(midpoint(center, self.rect.bottomleft), (50, 50))
+			self.lrect = pygame.Rect(midpoint_1(center, self.rect.midright), (50, 100))
+			self.rrect = pygame.Rect(midpoint_1(center, self.rect.midleft), (50, 100))
 
 		elif self.angle >= 225 and self.angle <= 315:
-			self.lrect = pygame.Rect(midpoint(center, self.rect.topleft), (50, 50))
-			self.rrect = pygame.Rect(midpoint(center, self.rect.topright), (50, 50))
+			# top
+			# self.lrect = pygame.Rect(midpoint(center, self.rect.topleft), (50, 50))
+			# self.rrect = pygame.Rect(midpoint(center, self.rect.topright), (50, 50))
+			self.lrect = pygame.Rect(midpoint_1(center, self.rect.midleft), (50, 100))
+			self.rrect = pygame.Rect(midpoint_1(center, self.rect.midright), (50, 100))
 
 		elif self.angle >= 135 and self.angle <= 225:
-			self.lrect = pygame.Rect(midpoint(center, self.rect.topright), (50, 50))
-			self.rrect = pygame.Rect(midpoint(center, self.rect.bottomright), (50, 50))
+			# right
+			# self.lrect = pygame.Rect(midpoint(center, self.rect.topright), (50, 50))
+			# self.rrect = pygame.Rect(midpoint(center, self.rect.bottomright), (50, 50))
+			self.lrect = pygame.Rect(midpoint_2(center, self.rect.midtop), (100, 50))
+			self.rrect = pygame.Rect(midpoint_2(center, self.rect.midbottom), (100, 50))
 
 		elif (self.angle >= 315 and self.angle <= 360) or (self.angle >= 0 and self.angle <= 45):
-			self.lrect = pygame.Rect(midpoint(center, self.rect.bottomleft), (50, 50))
-			self.rrect = pygame.Rect(midpoint(center, self.rect.topleft), (50, 50))
+			# left
+			# self.lrect = pygame.Rect(midpoint(center, self.rect.bottomleft), (50, 50))
+			# self.rrect = pygame.Rect(midpoint(center, self.rect.topleft), (50, 50))
+			self.lrect = pygame.Rect(midpoint_2(center, self.rect.midbottom), (100, 50))
+			self.rrect = pygame.Rect(midpoint_2(center, self.rect.midtop), (100, 50))
 
 	def rotateright(self ):
 		self.angle -= 2
@@ -105,10 +121,13 @@ class gameobject():
 			for i in collidecheck:
 				if self.rrect.colliderect(ready[i].image_rect):
 					self.rotateleft()
-				elif self.lrect.colliderect(ready[i].image_rect):
+					self.color2 = (0, 255, 0)
+				if self.lrect.colliderect(ready[i].image_rect):
+					self.color1 = (0, 255, 0)
 					self.rotateright()
-				# else:
-				# 	print('nani')
+		else:
+			self.color1 = (255, 0, 0)
+			self.color2 = (255, 0, 0)
 
 	def setpos(self, diff):
 		self.x += diff*(math.cos(math.radians(self.angle)))
