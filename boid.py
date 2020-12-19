@@ -5,10 +5,10 @@ import time
 from itertools import cycle
 from tkinter import *
 root = Tk()
-root.geometry('200x500')
-root.configure(bg='black')
+root.geometry('186x600')
+root.geometry('+45+69')
 root.title('configs')
-bs = 0
+bs = 100
 angle_diff = 60
 
 
@@ -30,10 +30,7 @@ def rando_bias():
 	bavoid = round(random.random(), 2)
 	bfollow = round(random.randrange(0, int(100*(1 - bavoid)))/100, 2)
 	bcohes =  round(1 - bavoid - bfollow, 2)
-	btext.set(f'bavoid : {str(bavoid)}\nbfollow : {str(bfollow)}\nbcohes : {str(bcohes)}')
-
-
-
+	btext.set(f'R1W : {str(bavoid)}\nR2W : {str(bfollow)}\nR3W : {str(bcohes)}')
 
 text1 = StringVar()
 def incspd():
@@ -61,40 +58,139 @@ def add5():
 def rem5():
 	for i in range(5) : ready.pop()
 
+def ruonec():
+	global ruone_
+	ruone_ = not ruone_
+	ruone.set(f'RuleOne : {ruone_}')
+
+def rutwoc():
+	global rutwo_
+	rutwo_ = not rutwo_
+	rutwo.set(f'RuleTwo : {rutwo_}')
+
+def ruthreec():
+	global ruthree_
+	ruthree_ = not ruthree_
+	ruthree.set(f'RuleThree : {ruthree_}')
+
+def rufourc():
+	global rufour_
+	rufour_ = not rufour_
+	rufour.set(f'FollowMouse : {rufour_}')
+
+def drawrecc():
+	global drawrecs
+	drawrecs = not drawrecs
+	drawrec.set(f'DrawRecs : {drawrecs}')
+
+def updatec():
+	global pyupdate
+	pyupdate = not pyupdate
+	update.set(f'Update : {pyupdate}')
+
+def avoidwallc():
+	global avoidwall
+	avoidwall = not avoidwall
+	avoidwalls.set(f'AvoidWall : {avoidwall}')
+
+def phasec():
+	global phase
+	phase = not phase
+	phases.set(f'NotPhase : {phase}')
+
+ruone_ = True
+rutwo_ = True
+ruthree_ = True
+rufour_ = False
+drawrecs = False
+pyupdate = False
+avoidwall = False
+phase = False
 
 text1.set(bs)
-button = Button(root,text = 'Inc speed', command = incspd)
-button.grid(row = 0, column = 0, sticky = W + E + N + S)
+button = Button(root, text = 'Inc speed', command = incspd)
+button.grid(row = 0, column = 0, sticky = W + E + N + S, ipady = 4)
 button1 = Button(root, text='Dec speed', command = decspd)
-button1.grid(row = 0, column= 1, sticky = W + E + N + S)
-textbox1 = Label(root, textvariable = text1)
-textbox1.grid(row = 0, column = 2, sticky = W + E + N + S)
+button1.grid(row = 0, column= 1, sticky = W + E + N + S, ipady = 4)
+textbox1 = Label(root, textvariable = text1, relief = GROOVE)
+textbox1.grid(row = 0, column = 2, sticky = W + E + N + S, ipady = 4)
 
 text2.set(angle_diff)
-button3 = Button(root,text = 'Inc angle', command = incangle)
-button3.grid(row = 1, column = 0, sticky = W + E + N + S)
-button4 = Button(root,text = 'Dec angle', command = decangle)
-button4.grid(row = 1, column = 1, sticky = W + E + N + S)
-textbox3 = Label(root, textvariable = text2)
-textbox3.grid(row = 1, column = 2, sticky = W + E + N + S)
+button3 = Button(root, text = 'Inc angle', command = incangle, bd = 2)
+button3.grid(row = 1, column = 0, sticky = W + E + N + S, ipady = 4)
+button4 = Button(root, text = 'Dec angle', command = decangle, bd = 2)
+button4.grid(row = 1, column = 1, sticky = W + E + N + S, ipady = 4)
+textbox3 = Label(root, textvariable = text2, relief = GROOVE)
+textbox3.grid(row = 1, column = 2, sticky = W + E + N + S, ipady = 4)
 
 btext = StringVar()
-btext.set(f'bavoid : {str(bavoid)}\nbfollow : {str(bfollow)}\nbcohes : {str(bcohes)}')
-button2 = Button(root,text = 'randomize bias', command = rando_bias)
-button2.grid(row = 2, column = 0, sticky = W + E + N + S)
-textbox2 = Label(root, textvariable = btext)
-textbox2.grid(row = 2, column = 1, columnspan = 3, sticky = W + E + N + S)
+btext.set(f'R1W : {str(bavoid)}\nR2W : {str(bfollow)}\nR3W : {str(bcohes)}')
+button2 = Button(root, text = 'Randomize Bias', command = rando_bias, anchor = W, bd = 2)
+button2.grid(row = 2, column = 0, sticky = W + E + N + S, ipady = 4)
+textbox2 = Label(root, textvariable = btext, relief = GROOVE)
+textbox2.grid(row = 2, column = 1, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
-button6 = Button(root,text = 'add 5 boids', command = add5)
-button6.grid(row = 3, column = 0, sticky = W + E + N + S)
+button5 = Button(root, text = 'Add 5 boids', command = add5, bd = 2)
+button5.grid(row = 3, column = 0, sticky = W + E + N + S, ipady = 4)
 
-button6 = Button(root,text = 'remove 5 boids', command = rem5)
-button6.grid(row = 3, column = 1, sticky = W + E + N + S)
+button6 = Button(root, text = 'Remove 5 boids', command = rem5, bd = 2)
+button6.grid(row = 3, column = 1, columnspan = 2, sticky = W + E + N + S, ipady = 4)
 
+ruone = StringVar()
+ruone.set(f'RuleOne : {ruone_}')
+button7 = Button(root, textvariable =ruone , command = ruonec, anchor = W, bd = 2)
+button7.grid(row = 4, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
+rutwo = StringVar()
+rutwo.set(f'RuleTwo : {rutwo_}')
+button8 = Button(root, textvariable = rutwo, command = rutwoc, anchor = W, bd = 2)
+button8.grid(row = 5, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
+ruthree = StringVar()
+ruthree.set(f'RuleThree : {ruthree_}')
+button9 = Button(root, textvariable = ruthree, command = ruthreec, anchor = W, bd = 2)
+button9.grid(row = 6, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
+rufour = StringVar()
+rufour.set(f'FollowMouse : {rufour_}')
+button10 = Button(root, textvariable = rufour, command = rufourc, anchor = W, bd = 2)
+button10.grid(row = 7, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
+avoidwalls = StringVar()
+avoidwalls.set(f'AvoidWall : {avoidwall}')
+button12 = Button(root, textvariable = avoidwalls, command = avoidwallc, anchor = W, bd = 2)
+button12.grid(row = 8, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+phases = StringVar()
+phases.set(f'NotPhase : {phase}')
+button14 = Button(root, textvariable = phases, command = phasec, anchor = W, bd = 2)
+button14.grid(row = 9, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+drawrec = StringVar()
+drawrec.set(f'Drawrecs : {drawrecs}')
+button11 = Button(root, textvariable = drawrec, command = drawrecc, anchor = W, bd = 2)
+button11.grid(row = 10, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+update = StringVar()
+update.set(f'Update : {pyupdate}')
+button12 = Button(root, textvariable = update, command = updatec, anchor = W, bd = 2)
+button12.grid(row = 11, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+fps = StringVar()
+label1 = Label(root, textvariable = fps, anchor = W, relief = GROOVE)
+label1.grid(row = 12, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+mousepos = StringVar()
+label2 = Label(root, textvariable = mousepos, anchor = W, relief = GROOVE)
+label2.grid(row = 13, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+liveboid = StringVar()
+label3 = Label(root, textvariable = liveboid, anchor = W, relief = GROOVE)
+label3.grid(row = 14, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
+
+testing = StringVar()
+label4 = Label(root, textvariable = testing, anchor = W, relief = GROOVE)
+label4.grid(row = 15, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
 pygame.init()
 # pygame.mixer.init()
@@ -224,6 +320,8 @@ class gameobject():
 		self.angle %= 360
 
 	def ruleone(self):
+		if not ruone_:
+			return
 		# boids steer away from other boids
 		collidecheck=self.vision.collidelistall([i for i in recs if i != self.image_rect])
 		if collidecheck != []:
@@ -248,30 +346,9 @@ class gameobject():
 			self.color1=(255, 0, 0)
 			self.color2=(255, 0, 0)
 
-	def mousefollow(self):
-		# boids steer towards the mouse pos
-		center_angle= int(math.degrees(math.atan2(my - self.y, mx - self.x)))
-		center_angle %= 360
-
-		# if center_angle == int(self.angle): #dos not work
-		# 	print('yey',int(self.angle), center_angle) #wrong
-		# 	pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
-		# 	return
-
-		if center_angle < self.angle:
-			self.angle -= angle_diff*delta
-			self.angle %= 360
-
-		if center_angle > self.angle:
-			self.angle += angle_diff*delta
-			self.angle %= 360
-		
-		print(int(self.angle), center_angle)
-		
-		pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
-
-
 	def ruletwo(self):
+		if not rutwo_:
+			return
 		# boids steer in direction of nearby boids
 		angles=[ready[i].angle for i in self.vision.collidelistall([i.image_rect for i in ready if i != self])]
 		if angles != []:
@@ -284,11 +361,13 @@ class gameobject():
 				self.angle %= 360
 
 	def rulethree(self):
+		if not ruthree_:
+			return
 		# boids steer towrards center if other boids
 		points=[recs[i].center for i in self.vision.collidelistall([i for i in recs if i != self.image_rect])]
 		if points != []:
-			point_x, point_y=avgpoint([i[0] for i in points], [i[1] for i in points], len(points))
-			center_angle=math.degrees(math.atan2(point_y - self.y, point_x - self.x))
+			point_x, point_y = avgpoint([i[0] for i in points], [i[1] for i in points], len(points))
+			center_angle = -math.degrees(math.atan2(point_y - self.y, point_x - self.x)) + 180
 			if center_angle > self.angle:
 				self.angle += angle_diff*delta*bcohes
 				self.angle %= 360
@@ -297,7 +376,27 @@ class gameobject():
 				self.angle -= angle_diff*delta*bcohes
 				self.angle %= 360
 
+	def mousefollow(self):
+		if not rufour_:
+			return
+		# boids steer towards the mouse pos
+		center_angle= -int(math.degrees(math.atan2(my - self.y, mx - self.x))) + 180
+		# center_angle %= 360
+
+		if center_angle < int(self.angle):
+			self.angle -= angle_diff*delta
+			self.angle %= 360
+
+		if center_angle > int(self.angle):
+			self.angle += angle_diff*delta
+			self.angle %= 360
+		if drawrecs:
+			pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
+			testing.set(f'center_angle : {center_angle}, self_angle : {int(self.angle)}')
+
 	def rulefour(self):
+		if not avoidwall:
+			return
 		# boids steer away from the edges
 		collidecheck = self.vision.collidelistall(walls)
 		if collidecheck != []:
@@ -329,11 +428,10 @@ class gameobject():
 			self.left = False
 
 	def rulefive(self):
+		if not phase:
+			return
 		# boids cannot intercept with other boids
 		points = [recs[i].center for i in self.image_rect.collidelistall([i for i in recs if i != self.image_rect])]
-		# if points != []:
-		# 	ready.remove(self)
-		# 	return
 		if points != []:
 			for i ,j in points:
 				if self.x >= i:
@@ -344,8 +442,6 @@ class gameobject():
 					self.y += bs*delta
 				else:
 					self.y -= bs*delta
-	
-
 
 	def setpos(self, diff):
 		self.x += diff*(math.cos(math.radians(self.angle)))
@@ -368,34 +464,19 @@ def move(i):
 		i.updategame()
 		i.setpos(-bs*delta)
 		if i.dontskiprule123:
-			# i.ruleone()
-			# i.ruletwo()
-			# i.rulethree()
+			i.ruleone()
+			i.ruletwo()
+			i.rulethree()
 			i.mousefollow()
-			# i.rulefive()
-		# i.rulefour()
+			i.rulefive()
+		i.rulefour()
 
-
-
-
-
-# formatting configuration menu
-def multlines(text, configs, fontsize):
-	text=text.replace('True', 'ON').replace('False', 'OFF').splitlines()
-	for i, j in enumerate(text):
-		screen.blit(configs.render(j, True, (0, 0, 0)), (0, fontsize*i))
-		screen.blit(configs.render(j, True, (0, 0, 0)), (0, fontsize*i))
-
-
-def update():
+def updatesc():
 	# drawing backround
 	if pyupdate:
 		screen.fill((255, 255, 255))
 		# screen.fill((30, 20, 30))
 
-	# drawsconfigs
-	if configuration:
-		multlines(text, configs, 12)
 	# update player,enemy position
 	for i in ready:
 		move(i)
@@ -403,15 +484,12 @@ def update():
 	# drawing border
 	if drawrecs:
 		for i in walls:
-			pygame.draw.rect(screen, (255, 0, 0), i)
+			pygame.draw.rect(screen, (200, 230, 250), i)
 
 	# creates frame in window
 	pygame.display.update()
 	# updates root
 	root.update()
-
-configs=pygame.font.Font('freesansbold.ttf', 12)
-
 
 
 
@@ -451,34 +529,12 @@ while run:
 		color=next(colors)
 	count += 1
 
-	# updating game configs
-	text=f'[F7]drawrecs: {drawrecs}\n[F8]update: {pyupdate}\n[F9]configs: {configuration}\n[\]exit\nfps: {round(clock.get_fps(), 2)}\nliveboids: {len(ready)}\nmouse: {mx, my}'
+	fps.set(f'fps : {round(clock.get_fps(), 2)}')
+	mousepos.set(f'mouse : {mx}, {my}')
+	liveboid.set(f'liveboids : {len(ready)}')
 
 	# controlling ships
 	keys=pygame.key.get_pressed()
-
-	# allows keypresses 1 - K12 to change game settings
-	if configcheck:
-		if keys[pygame.K_F7]:
-			drawrecs=not drawrecs
-			configcheck=False
-
-		elif keys[pygame.K_F8]:
-			pyupdate=not pyupdate
-			configcheck=False
-
-		elif keys[pygame.K_F9]:
-			configuration=not configuration
-			configcheck=False
-
-		elif keys[pygame.K_BACKSLASH]:
-			run=False
-			continue
-
-		elif keys[pygame.K_SPACE]:
-			ready.append(gameobject(white, angle = random.randint(0, 359)))
-			# ready.append(gameobject(white, angle = 0))
-			configcheck = False
 
 	if keys[pygame.K_UP]:
 		player.setpos(-bs*delta)
@@ -492,12 +548,4 @@ while run:
 	if keys[pygame.K_DOWN]:
 		player.setpos(bs*delta)
 
-	# activate on release
-	if event.type == pygame.KEYUP:
-		if event.key == pygame.K_LSHIFT:
-			ppress=True
-			configcheck=True
-		elif configcheck == False and event.key in [pygame.K_F7, pygame.K_F8, pygame.K_F9, pygame.K_BACKSLASH, pygame.K_SPACE]:
-			configcheck=True
-
-	update()
+	updatesc()
