@@ -5,12 +5,32 @@ import time
 from itertools import cycle
 from tkinter import *
 root = Tk()
-root.geometry('100x500')
+root.geometry('200x500')
 root.configure(bg='black')
 root.title('configs')
 bs = 0
-angle_diff = 0
+angle_diff = 60
 
+
+# turn bias
+
+# avoid bias
+bavoid = .33
+
+# follow bias
+bfollow = .33
+
+# cohesion bias
+bcohes = .33
+
+
+# randomize bias
+def rando_bias():
+	global bavoid, bfollow, bcohes
+	bavoid = round(random.random(), 2)
+	bfollow = round(random.randrange(0, int(100*(1 - bavoid)))/100, 2)
+	bcohes =  round(1 - bavoid - bfollow, 2)
+	btext.set(f'bavoid : {str(bavoid)}\nbfollow : {str(bfollow)}\nbcohes : {str(bcohes)}')
 
 
 
@@ -19,38 +39,57 @@ text1 = StringVar()
 def incspd():
 	global bs
 	bs += 10
-	print(bs)
 	text1.set(bs)
-
 def decspd():
 	global bs
 	bs -= 10
-	print(bs)
 	text1.set(bs)
 
+text2 = StringVar()
 def incangle():
 	global angle_diff
 	angle_diff += 10
-	print(angle_diff)
-
+	text2.set(angle_diff)
 def decangle():
 	global angle_diff
 	angle_diff -= 10
-	print(angle_diff)
+	text2.set(angle_diff)
 
+def add5():
+	for i in range(5) : ready.append(gameobject(white, angle = random.randint(0, 359)))
+
+def rem5():
+	for i in range(5) : ready.pop()
+
+
+text1.set(bs)
 button = Button(root,text = 'Inc speed', command = incspd)
-button.grid(row = 0, column = 0, sticky = W + E)
-
+button.grid(row = 0, column = 0, sticky = W + E + N + S)
 button1 = Button(root, text='Dec speed', command = decspd)
-button1.grid(row = 0, column= 1, sticky = W + E)
-
+button1.grid(row = 0, column= 1, sticky = W + E + N + S)
 textbox1 = Label(root, textvariable = text1)
-textbox1.grid(row = 0, column = 2, sticky = W + E)
-button3 = Button(root,text = 'Inc angle', command = incangle)
-button3.grid(row = 1, column = 0, sticky = W + E)
+textbox1.grid(row = 0, column = 2, sticky = W + E + N + S)
 
+text2.set(angle_diff)
+button3 = Button(root,text = 'Inc angle', command = incangle)
+button3.grid(row = 1, column = 0, sticky = W + E + N + S)
 button4 = Button(root,text = 'Dec angle', command = decangle)
-button4.grid(row = 1, column = 1, sticky = W + E)
+button4.grid(row = 1, column = 1, sticky = W + E + N + S)
+textbox3 = Label(root, textvariable = text2)
+textbox3.grid(row = 1, column = 2, sticky = W + E + N + S)
+
+btext = StringVar()
+btext.set(f'bavoid : {str(bavoid)}\nbfollow : {str(bfollow)}\nbcohes : {str(bcohes)}')
+button2 = Button(root,text = 'randomize bias', command = rando_bias)
+button2.grid(row = 2, column = 0, sticky = W + E + N + S)
+textbox2 = Label(root, textvariable = btext)
+textbox2.grid(row = 2, column = 1, columnspan = 3, sticky = W + E + N + S)
+
+button6 = Button(root,text = 'add 5 boids', command = add5)
+button6.grid(row = 3, column = 0, sticky = W + E + N + S)
+
+button6 = Button(root,text = 'remove 5 boids', command = rem5)
+button6.grid(row = 3, column = 1, sticky = W + E + N + S)
 
 
 
@@ -138,6 +177,7 @@ class gameobject():
 			# pygame.draw.rect(screen, self.color1, self.lrect)
 			# pygame.draw.rect(screen, self.color2, self.rrect)
 			pygame.draw.rect(screen, (0, 80, 0, 100), self.vision)
+			pygame.draw.rect(screen, (0, 200, 0, 100), self.image_rect)
 
 		screen.blit(self.rotated_image, (self.x - width, self.y - height))
 
@@ -185,30 +225,63 @@ class gameobject():
 
 	def ruleone(self):
 		# boids steer away from other boids
-		collidecheck=self.vision.collidelistall([i for i in recs])
+		collidecheck=self.vision.collidelistall([i for i in recs if i != self.image_rect])
 		if collidecheck != []:
 			for i in collidecheck:
-				if self.image_rect == recs[i]:
-					continue
 				if self.rrect.collidepoint(recs[i].center):
-					self.rotateleft()
-					self.color2=(0, 255, 0)
+					self.angle += angle_diff*delta*bavoid
+					self.angle %= 360
 				if self.lrect.collidepoint(recs[i].center):
-					self.rotateright()
-					self.color1=(0, 255, 0)
+					self.angle -= angle_diff*delta*bavoid
+					self.angle %= 360
+				# return
+			# for i in [random.choice(collidecheck)]:
+			# 	if self.rrect.collidepoint(recs[i].center):
+			# 		self.angle += angle_diff*delta*bavoid
+			# 		self.angle %= 360
+			# 	if self.lrect.collidepoint(recs[i].center):
+			# 		self.angle -= angle_diff*delta*bavoid
+			# 		self.angle %= 360
+			# 	return
+			
 		else:
 			self.color1=(255, 0, 0)
 			self.color2=(255, 0, 0)
 
+	def mousefollow(self):
+		# boids steer towards the mouse pos
+		center_angle= int(math.degrees(math.atan2(my - self.y, mx - self.x)))
+		center_angle %= 360
+
+		# if center_angle == int(self.angle): #dos not work
+		# 	print('yey',int(self.angle), center_angle) #wrong
+		# 	pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
+		# 	return
+
+		if center_angle < self.angle:
+			self.angle -= angle_diff*delta
+			self.angle %= 360
+
+		if center_angle > self.angle:
+			self.angle += angle_diff*delta
+			self.angle %= 360
+		
+		print(int(self.angle), center_angle)
+		
+		pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
+
+
 	def ruletwo(self):
 		# boids steer in direction of nearby boids
-		angles=[ready[i].angle for i in self.vision.collidelistall([i for i in recs if i != self])]
+		angles=[ready[i].angle for i in self.vision.collidelistall([i.image_rect for i in ready if i != self])]
 		if angles != []:
 			avg_angle=sum(angles)/len(angles)
 			if avg_angle < self.angle:
-				self.rotateright()
+				self.angle -= angle_diff*delta*bfollow
+				self.angle %= 360
 			elif avg_angle > self.angle:
-				self.rotateleft()
+				self.angle += angle_diff*delta*bfollow
+				self.angle %= 360
 
 	def rulethree(self):
 		# boids steer towrards center if other boids
@@ -217,13 +290,14 @@ class gameobject():
 			point_x, point_y=avgpoint([i[0] for i in points], [i[1] for i in points], len(points))
 			center_angle=math.degrees(math.atan2(point_y - self.y, point_x - self.x))
 			if center_angle > self.angle:
-				self.rotateleft()
-				self.rotateleft()
-			if center_angle < self.angle:
-				self.rotateright()
-				self.rotateright()
+				self.angle += angle_diff*delta*bcohes
+				self.angle %= 360
 
-	def rulefour(self ):
+			if center_angle < self.angle:
+				self.angle -= angle_diff*delta*bcohes
+				self.angle %= 360
+
+	def rulefour(self):
 		# boids steer away from the edges
 		collidecheck = self.vision.collidelistall(walls)
 		if collidecheck != []:
@@ -243,7 +317,7 @@ class gameobject():
 				if self.left:
 					self.rotateleft()
 					self.rotateleft()
-
+					
 				if self.right:
 					self.rotateright()
 					self.rotateright()
@@ -253,7 +327,24 @@ class gameobject():
 			self.dontskiprule123 == True
 			self.right = False
 			self.left = False
-				
+
+	def rulefive(self):
+		# boids cannot intercept with other boids
+		points = [recs[i].center for i in self.image_rect.collidelistall([i for i in recs if i != self.image_rect])]
+		# if points != []:
+		# 	ready.remove(self)
+		# 	return
+		if points != []:
+			for i ,j in points:
+				if self.x >= i:
+					self.x += bs*delta
+				else:
+					self.x -= bs*delta
+				if self.y >= j:
+					self.y += bs*delta
+				else:
+					self.y -= bs*delta
+	
 
 
 	def setpos(self, diff):
@@ -277,9 +368,11 @@ def move(i):
 		i.updategame()
 		i.setpos(-bs*delta)
 		if i.dontskiprule123:
-			i.ruleone()
-			i.ruletwo()
-			i.rulethree()
+			# i.ruleone()
+			# i.ruletwo()
+			# i.rulethree()
+			i.mousefollow()
+			# i.rulefive()
 		# i.rulefour()
 
 
@@ -291,7 +384,7 @@ def multlines(text, configs, fontsize):
 	text=text.replace('True', 'ON').replace('False', 'OFF').splitlines()
 	for i, j in enumerate(text):
 		screen.blit(configs.render(j, True, (0, 0, 0)), (0, fontsize*i))
-		screen.blit(configs.render(j, True, (255, 255, 255)), (0, fontsize*i))
+		screen.blit(configs.render(j, True, (0, 0, 0)), (0, fontsize*i))
 
 
 def update():
@@ -336,7 +429,7 @@ count = 1
 
 ready.append(gameobject(white, angle=random.randint(0, 359)))
 player = gameobject(image=white, angle=random.randint(0, 359), pcolor=(255, 0, 0))
-ready.append(player)
+# ready.append(player)
 
 while run:
 	# returns each event in keyboard
