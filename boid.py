@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 import time
+import numpy
 from itertools import cycle
 from tkinter import *
 root = Tk()
@@ -107,6 +108,7 @@ drawrecs = False
 pyupdate = False
 avoidwall = False
 phase = False
+pyupdate = True
 
 text1.set(bs)
 button = Button(root, text = 'Inc speed', command = incspd)
@@ -217,7 +219,7 @@ colors = cycle(((0, 255, 0), (10, 255, 0), (20, 255, 0), (30, 255, 0), (40, 255,
 
 color=next(colors)
 
-angles = list(range(360))
+angles = numpy.array(list(range(360)))
 
 
 
@@ -332,7 +334,7 @@ class gameobject():
 		target = int(target)
 		if target > angle:
 			la = len(angles[angle:target + 1])
-			lb = len(angles[:angle] + angles[target:])
+			lb = len(angles[:angle]) + len(angles[target:])
 
 			if la > lb:
 				self.angle -= angle_diff*delta*bias
@@ -343,7 +345,7 @@ class gameobject():
 
 		elif target < angle:
 			la = len(angles[target:angle + 1])
-			lb = len(angles[:target] + angles[angle:])
+			lb = len(angles[:target]) + len(angles[angle:])
 
 			if la < lb:
 				self.angle -= angle_diff*delta*bias
@@ -464,7 +466,7 @@ dy=(-30, 615)
 
 def size():
 	s = random.randint(20, 45)
-	w = random.randint(s - 5, s + 5)
+	w = random.randint(s - 5, s + 10)
 	return (s, w)
 
 # def fish():
@@ -477,30 +479,20 @@ red = pygame.image.load('assets//fish.png')
 
 def move(i):
 	global bs
-	# player ship - arrow keys
-	if player == i:
-		i.updategame()
-	else:
-		i.updategame()
-		i.setpos(-bs*delta)
-		if i.dontskiprule123:
-			i.ruleone()
-			i.ruletwo()
-			i.rulethree()
-			i.mousefollow()
-			i.rulefive()
-		i.rulefour()
+	i.updategame()
+	i.setpos(-bs*delta)
+	if i.dontskiprule123:
+		i.ruleone()
+		i.ruletwo()
+		i.rulethree()
+		i.mousefollow()
+		i.rulefive()
+	i.rulefour()
 
 def updatesc():
-	# drawing backround
 	if pyupdate:
-		# screen.fill((0, 0, 0))
+		# drawing backround
 		screen.fill((255, 255, 255))
-		# screen.fill(((190, 230, 250)))
-		# screen.fill((30, 20, 30))
-		# screen.fill((200, 230, 250))
-		# screen.fill((r, g, b))
-		
 
 	# update player,enemy position
 	for i in ready:
@@ -519,20 +511,12 @@ def updatesc():
 
 
 walls = [pygame.Rect(0, -25, 800, 50), pygame.Rect(0, 575, 800, 50), pygame.Rect(-25, 0, 50, 600), pygame.Rect(775, 0, 50, 600)]
-drawrecs = False
-pyupdate = True
-configuration = True
 ready = []
 recs = []
-run = True
-epress = True
-ppress = True
-configcheck = True
 count = 1
+run = True
 
 ready.append(gameobject(white, angle=random.randint(0, 359)))
-player = gameobject(image=red, angle=random.randint(0, 359), pcolor=(255, 0, 0))
-# ready.append(player)
 
 while run:
 	# returns each event in keyboard
@@ -549,28 +533,14 @@ while run:
 	# updating delta value and setting frame rate
 	delta=clock.tick(60)/1000
 
-	# updating color
-	if count % 2 == 0:
-		color=next(colors)
-	count += 1
 
 	fps.set(f'fps : {round(clock.get_fps(), 2)}')
 	mousepos.set(f'mouse : {mx}, {my}')
 	liveboid.set(f'liveboids : {len(ready)}')
 
-	# controlling ships
-	keys=pygame.key.get_pressed()
-
-	if keys[pygame.K_UP]:
-		player.setpos(-bs*delta)
-
-	if keys[pygame.K_LEFT]:
-		player.rotateleft()
-
-	if keys[pygame.K_RIGHT]:
-		player.rotateright()
-
-	if keys[pygame.K_DOWN]:
-		player.setpos(bs*delta)
+	# updating color
+	if count % 2 == 0:
+		color=next(colors)
+	count += 1
 
 	updatesc()
