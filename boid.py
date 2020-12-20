@@ -54,6 +54,7 @@ def decangle():
 
 def add5():
 	for i in range(5) : ready.append(gameobject(white, angle = random.randint(0, 359)))
+	# for i in range(5) : ready.append(gameobject(pygame.image.load(fish()), angle = random.randint(0, 359)))
 
 def rem5():
 	for i in range(5) : ready.pop()
@@ -205,7 +206,20 @@ clock=pygame.time.Clock()
 # colors:
 colors = cycle(((0, 255, 0), (10, 255, 0), (20, 255, 0), (30, 255, 0), (40, 255, 0), (50, 255, 0), (60, 255, 0), (70, 255, 0), (80, 255, 0), (90, 255, 0), (100, 255, 0), (110, 255, 0), (120, 255, 0), (130, 255, 0), (140, 255, 0), (150, 255, 0), (160, 255, 0), (170, 255, 0), (180, 255, 0), (190, 255, 0), (200, 255, 0), (210, 255,
 0), (220, 255, 0), (230, 255, 0), (240, 255, 0), (250, 255, 0), (255, 255, 0)))
+
+# colors = cycle(((0, 255, 0), (10, 255, 0), (20, 255, 0), (30, 255, 0), (40, 255, 0), (50, 255, 0), (60, 255, 0), (70, 255, 0), (80, 255, 0), (90, 255, 0), (100, 255, 0), (110, 255, 0), (120, 255, 0), (130, 255, 0), (140, 255, 0), (150, 255, 0), (160, 255, 0), (170, 255, 0), (180, 255, 0), (190, 255, 0), (200, 255, 0), (210, 255, 
+# 0), (220, 255, 0), (230, 255, 0), (240, 255, 0), (250, 255, 0), (255, 255, 0), (255, 245, 0), (255, 235, 0), (255, 225, 0), (255, 215, 0), (255, 205, 0), (255, 195, 0), (255, 185, 0), (255, 175, 0), (255, 165, 0), (255, 155, 0), (255, 145, 0), (255, 135, 0), (255, 125, 0), (255, 115, 0), (255, 105, 0), (255, 95, 0), (255, 85, 0), (255, 75, 0), (255, 65, 0), (255, 55, 0), (255, 45, 0), (255, 35, 0), (255, 25, 0), (255, 15, 0), (255, 5, 0), (255, 0, 0), (255, 0, 10), (255, 0, 20), (255, 0, 30), (255, 0, 40), (255, 0, 50), (255, 0, 60), (255, 0, 70), (255, 0, 80), (255, 0, 90), (255, 0, 100), (255, 0, 110), (255, 0, 120), (255, 0, 130), (255, 0, 140), (255, 0, 150), (255, 0, 160), (255, 0, 170), (255, 0, 180), (255, 0, 190), (255, 0, 200), (255, 0, 210), (255, 0, 220), (255, 0, 230), (255, 0, 240), (255, 0, 250), (255, 0, 255), (245, 0, 255), (235, 0, 255), (225, 0, 255), (215, 0, 255), (205, 0, 255), (195, 0, 255), (185, 0, 255), (175, 
+# 0, 255), (165, 0, 255), (155, 0, 255), (145, 0, 255), (135, 0, 255), (125, 0, 255), (115, 0, 255), (105, 0, 255), (95, 0, 255), (85, 0, 255), (75, 0, 255), (65, 0, 255), (55, 0, 255), (45, 0, 255), (35, 0, 255), (25, 0, 255), (15, 0, 255), (5, 0, 255), (0, 0, 255), (0, 10, 255), (0, 20, 255), (0, 30, 255), (0, 40, 
+# 255), (0, 50, 255), (0, 60, 255), (0, 70, 255), (0, 80, 255), (0, 90, 255), (0, 100, 255), (0, 110, 255), (0, 120, 255), (0, 130, 255), (0, 140, 255), (0, 150, 255), (0, 160, 255), (0, 170, 255), (0, 180, 255), (0, 190, 255), (0, 200, 255), (0, 210, 255), (0, 220, 255), (0, 230, 255), (0, 240, 255), (0, 250, 255)))
+
+# colors = cycle(((65, 0, 255), (55, 0, 255), (45, 0, 255), (35, 0, 255), (25, 0, 255), (15, 0, 255), (5, 0, 255), (0, 0, 255), (0, 10, 255), (0, 20, 255), (0, 30, 255), (0, 40, 
+# 255), (0, 50, 255), (0, 60, 255), (0, 70, 255), (0, 80, 255), (0, 90, 255), (0, 100, 255), (0, 110, 255), (0, 120, 255), (0, 130, 255), (0, 140, 255), (0, 150, 255), (0, 160, 255), (0, 170, 255), (0, 180, 255), (0, 190, 255), (0, 200, 255), (0, 210, 255), (0, 220, 255), (0, 230, 255), (0, 240, 255), (0, 250, 255)))
+
 color=next(colors)
+
+angles = list(range(360))
+
+
 
 
 def midpoint(p1, p2):
@@ -220,12 +234,14 @@ def midpoint_2(p1, p2):
 def avgpoint(listx, listy, length):
 	return sum(listx)/length, sum(listy)/length
 
+
+
 class gameobject():
 	def __init__(self, image, angle, pcolor=0):
 
 		self.x=400
 		self.y=300
-		self.original_image=image
+		self.original_image = pygame.transform.scale(image, size())
 		self.color1=(255, 0, 0)
 		self.color2=(255, 0, 0)
 		if pcolor != 0:
@@ -311,6 +327,31 @@ class gameobject():
 			self.rrect=pygame.Rect(midpoint_2(center, self.rect.midtop), (100, 50))
 			self.vision=pygame.Rect(self.rect.topleft, (75, 100))
 
+	def move_to_angle(self, target, bias):
+		angle = int(self.angle)
+		target = int(target)
+		if target > angle:
+			la = len(angles[angle:target + 1])
+			lb = len(angles[:angle] + angles[target:])
+
+			if la > lb:
+				self.angle -= angle_diff*delta*bias
+				self.angle %= 360
+			elif la < lb:
+				self.angle += angle_diff*delta*bias
+				self.angle %= 360
+
+		elif target < angle:
+			la = len(angles[target:angle + 1])
+			lb = len(angles[:target] + angles[angle:])
+
+			if la < lb:
+				self.angle -= angle_diff*delta*bias
+				self.angle %= 360
+			elif la > lb:
+				self.angle += angle_diff*delta*bias
+				self.angle %= 360
+
 	def rotateright(self):
 		self.angle -= angle_diff*delta
 		self.angle %= 360
@@ -332,16 +373,6 @@ class gameobject():
 				if self.lrect.collidepoint(recs[i].center):
 					self.angle -= angle_diff*delta*bavoid
 					self.angle %= 360
-				# return
-			# for i in [random.choice(collidecheck)]:
-			# 	if self.rrect.collidepoint(recs[i].center):
-			# 		self.angle += angle_diff*delta*bavoid
-			# 		self.angle %= 360
-			# 	if self.lrect.collidepoint(recs[i].center):
-			# 		self.angle -= angle_diff*delta*bavoid
-			# 		self.angle %= 360
-			# 	return
-			
 		else:
 			self.color1=(255, 0, 0)
 			self.color2=(255, 0, 0)
@@ -353,12 +384,7 @@ class gameobject():
 		angles=[ready[i].angle for i in self.vision.collidelistall([i.image_rect for i in ready if i != self])]
 		if angles != []:
 			avg_angle=sum(angles)/len(angles)
-			if avg_angle < self.angle:
-				self.angle -= angle_diff*delta*bfollow
-				self.angle %= 360
-			elif avg_angle > self.angle:
-				self.angle += angle_diff*delta*bfollow
-				self.angle %= 360
+			self.move_to_angle(avg_angle, bfollow)
 
 	def rulethree(self):
 		if not ruthree_:
@@ -368,31 +394,17 @@ class gameobject():
 		if points != []:
 			point_x, point_y = avgpoint([i[0] for i in points], [i[1] for i in points], len(points))
 			center_angle = -math.degrees(math.atan2(point_y - self.y, point_x - self.x)) + 180
-			if center_angle > self.angle:
-				self.angle += angle_diff*delta*bcohes
-				self.angle %= 360
-
-			if center_angle < self.angle:
-				self.angle -= angle_diff*delta*bcohes
-				self.angle %= 360
-
+			self.move_to_angle(center_angle, bcohes)
+			
 	def mousefollow(self):
 		if not rufour_:
 			return
 		# boids steer towards the mouse pos
-		center_angle= -int(math.degrees(math.atan2(my - self.y, mx - self.x))) + 180
-		# center_angle %= 360
+		center_angle = -math.degrees(math.atan2(my - self.y, mx - self.x)) + 180
+		self.move_to_angle(center_angle, 1)
 
-		if center_angle < int(self.angle):
-			self.angle -= angle_diff*delta
-			self.angle %= 360
-
-		if center_angle > int(self.angle):
-			self.angle += angle_diff*delta
-			self.angle %= 360
-		if drawrecs:
-			pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
-			testing.set(f'center_angle : {center_angle}, self_angle : {int(self.angle)}')
+		# pygame.draw.line(screen, (200, 0, 0, 0), (self.x, self.y), (mx, my))
+		# testing.set(f'center_angle : {int(center_angle)}\nship_angle : {int(self.angle)}')
 
 	def rulefour(self):
 		if not avoidwall:
@@ -450,9 +462,17 @@ class gameobject():
 dx=(-30, 815)
 dy=(-30, 615)
 
-white=pygame.transform.scale(pygame.image.load('assets//paper-plane.png'), (25, 25))
-# white.convert_alpha()
+def size():
+	s = random.randint(20, 45)
+	w = random.randint(s - 5, s + 5)
+	return (s, w)
 
+# def fish():
+# 	return random.choice(['assets//angelfish.png', 'assets//fish.png', 'assets//blue-tang-fish.png', 'assets//salmon.png', 'assets//shark.png', 'assets//tuna.png'])
+
+
+white = pygame.image.load('assets//fish.png')
+red = pygame.image.load('assets//fish.png')
 
 
 def move(i):
@@ -474,8 +494,13 @@ def move(i):
 def updatesc():
 	# drawing backround
 	if pyupdate:
+		# screen.fill((0, 0, 0))
 		screen.fill((255, 255, 255))
+		# screen.fill(((190, 230, 250)))
 		# screen.fill((30, 20, 30))
+		# screen.fill((200, 230, 250))
+		# screen.fill((r, g, b))
+		
 
 	# update player,enemy position
 	for i in ready:
@@ -506,7 +531,7 @@ configcheck = True
 count = 1
 
 ready.append(gameobject(white, angle=random.randint(0, 359)))
-player = gameobject(image=white, angle=random.randint(0, 359), pcolor=(255, 0, 0))
+player = gameobject(image=red, angle=random.randint(0, 359), pcolor=(255, 0, 0))
 # ready.append(player)
 
 while run:
