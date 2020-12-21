@@ -9,7 +9,7 @@ root = Tk()
 root.geometry('186x600')
 root.geometry('+45+69')
 root.title('configs')
-bs = 100
+bs = 120
 angle_diff = 60
 
 
@@ -111,32 +111,33 @@ phase = False
 pyupdate = True
 
 text1.set(bs)
-button = Button(root, text = 'Inc speed', command = incspd)
+button = Button(root, text = 'Inc speed', command = incspd, repeatinterval = 100, repeatdelay = 200)
 button.grid(row = 0, column = 0, sticky = W + E + N + S, ipady = 4)
-button1 = Button(root, text='Dec speed', command = decspd)
+
+button1 = Button(root, text='Dec speed', command = decspd, repeatinterval = 100, repeatdelay = 200)
 button1.grid(row = 0, column= 1, sticky = W + E + N + S, ipady = 4)
 textbox1 = Label(root, textvariable = text1, relief = GROOVE)
 textbox1.grid(row = 0, column = 2, sticky = W + E + N + S, ipady = 4)
 
 text2.set(angle_diff)
-button3 = Button(root, text = 'Inc angle', command = incangle, bd = 2)
+button3 = Button(root, text = 'Inc angle', command = incangle, bd = 2, repeatinterval = 100, repeatdelay = 200)
 button3.grid(row = 1, column = 0, sticky = W + E + N + S, ipady = 4)
-button4 = Button(root, text = 'Dec angle', command = decangle, bd = 2)
+button4 = Button(root, text = 'Dec angle', command = decangle, bd = 2, repeatinterval = 100, repeatdelay = 200)
 button4.grid(row = 1, column = 1, sticky = W + E + N + S, ipady = 4)
 textbox3 = Label(root, textvariable = text2, relief = GROOVE)
 textbox3.grid(row = 1, column = 2, sticky = W + E + N + S, ipady = 4)
 
 btext = StringVar()
 btext.set(f'R1W : {str(bavoid)}\nR2W : {str(bfollow)}\nR3W : {str(bcohes)}')
-button2 = Button(root, text = 'Randomize Bias', command = rando_bias, anchor = W, bd = 2)
+button2 = Button(root, text = 'Randomize Bias', command = rando_bias, anchor = W, bd = 2, repeatinterval = 300, repeatdelay = 500)
 button2.grid(row = 2, column = 0, sticky = W + E + N + S, ipady = 4)
 textbox2 = Label(root, textvariable = btext, relief = GROOVE)
 textbox2.grid(row = 2, column = 1, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
-button5 = Button(root, text = 'Add 5 boids', command = add5, bd = 2)
+button5 = Button(root, text = 'Add 5 boids', command = add5, bd = 2, repeatinterval = 50, repeatdelay = 200)
 button5.grid(row = 3, column = 0, sticky = W + E + N + S, ipady = 4)
 
-button6 = Button(root, text = 'Remove 5 boids', command = rem5, bd = 2)
+button6 = Button(root, text = 'Remove 5 boids', command = rem5, bd = 2, repeatinterval = 50, repeatdelay = 200)
 button6.grid(row = 3, column = 1, columnspan = 2, sticky = W + E + N + S, ipady = 4)
 
 ruone = StringVar()
@@ -196,11 +197,11 @@ label4 = Label(root, textvariable = testing, anchor = W, relief = GROOVE)
 label4.grid(row = 15, column = 0, columnspan = 3, sticky = W + E + N + S, ipady = 4)
 
 pygame.init()
-# pygame.mixer.init()
 
-screen=pygame.display.set_mode((800, 600))
 screen=pygame.display.set_mode((800, 600), pygame.RESIZABLE)
 pygame.display.set_caption('Boids')
+
+
 
 # setting clock
 clock=pygame.time.Clock()
@@ -355,11 +356,11 @@ class gameobject():
 				self.angle %= 360
 
 	def rotateright(self):
-		self.angle -= angle_diff*delta
+		self.angle -= angle_diff*delta*1.2
 		self.angle %= 360
 
 	def rotateleft(self):
-		self.angle += angle_diff*delta
+		self.angle += angle_diff*delta*1.2
 		self.angle %= 360
 
 	def ruleone(self):
@@ -413,29 +414,66 @@ class gameobject():
 			return
 		# boids steer away from the edges
 		collidecheck = self.vision.collidelistall(walls)
+		wallhit = False
 		if collidecheck != []:
 			self.dontskiprule123 == False
+			# boids cant move past wall
+			if self.y <= dy[0] or self.y >= dy[1]:
+				if self.y <= dy[0]:
+					self.y = dy[1]
+				else:
+					self.y = dy[0]
+					wallhit = True
+			elif self.x <= dx[0] or self.x >= dx[1]:
+				if self.x <= dx[0]:
+					self.x = dx[1]
+				else:
+					self.x = dx[0]
+					wallhit = True
+
 			for i in collidecheck:
 				if self.left == False and self.right == False:
-					if self.lrect.colliderect(walls[i]) and self.rrect.colliderect(walls[i]):
-						if random.choice([0, 1]):
-							self.right= True
-						else:
+					# top
+					if i == 0:
+						if self.angle > 270:
 							self.left = True
-					elif self.rrect.colliderect(walls[i]):
-						self.left = True
-					elif self.lrect.colliderect(walls[i]):
-						self.right = True
+						else:
+							self.right = True
+					# bottom
+					if i == 1:
+						if self.angle > 90:
+							self.left = True
+						else:
+							self.right = True
+					# left
+					if i == 2:
+						if self.angle > 0 and self.angle < 90:
+							self.left = True
+						else:
+							self.right = True
+					# right
+					if i == 3:
+						if self.angle > 180:
+							self.left = True
+						else:
+							self.right = True
+					break
 
 				if self.left:
+					if wallhit:
+						self.rotateleft()
+						self.rotateleft()
 					self.rotateleft()
 					self.rotateleft()
 					
 				if self.right:
+					if wallhit:
+						self.rotateright()
+						self.rotateright()
 					self.rotateright()
 					self.rotateright()
 
-				self.angle %= 360
+
 		else:
 			self.dontskiprule123 == True
 			self.right = False
@@ -461,8 +499,8 @@ class gameobject():
 		self.x += diff*(math.cos(math.radians(self.angle)))
 		self.y -= diff*(math.sin(math.radians(self.angle)))
 
-dx=(-30, 815)
-dy=(-30, 615)
+dx=(10, 1280)
+dy=(10, 720)
 
 def size():
 	s = random.randint(20, 45)
@@ -509,8 +547,8 @@ def updatesc():
 	root.update()
 
 
-
-walls = [pygame.Rect(0, -25, 800, 50), pygame.Rect(0, 575, 800, 50), pygame.Rect(-25, 0, 50, 600), pygame.Rect(775, 0, 50, 600)]
+#+-------------------top----------------------------bottom-------------------------left-------------------------right--------------+
+walls = [pygame.Rect(0, -25, 1270, 50), pygame.Rect(0, 710, 1270, 50), pygame.Rect(-25, 0, 50, 750), pygame.Rect(1255, 0, 50, 750)]
 ready = []
 recs = []
 count = 1
